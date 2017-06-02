@@ -49,6 +49,7 @@ libotbr_web_la_LIBADD                                           = \
     $(DBUS_LIBS)                                                  \
     -lavahi-core                                                  \
     -lavahi-common                                                \
+    -lavahi-client                                                \
     -lboost_filesystem                                            \
     -lboost_system                                                \
     -lpthread                                                     \
