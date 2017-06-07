@@ -55,6 +55,7 @@ libotbr_web_la_LIBADD                                           = \
     -lboost_filesystem                                            \
     -lboost_system                                                \
     -lpthread                                                     \
+    -ljsoncpp                                                     \
     $(top_builddir)/third_party/mbedtls/libmbedtls.la             \
     $(top_builddir)/src/utils/libutils.la                         \
     $(top_builddir)/src/common/libotbr-logging.la                 \
