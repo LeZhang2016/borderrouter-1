@@ -32,6 +32,7 @@
         .controller('AppCtrl', AppCtrl)
         .service('sharedProperties', function() {
             var index = 0;
+            var networkInfo;
 
             return {
                 getIndex: function() {
@@ -39,6 +40,12 @@
                 },
                 setIndex: function(value) {
                     index = value;
+                },
+                getNetworkInfo: function() {
+                    return networkInfo;
+                },
+                setNetworkInfo: function(value) {
+                    networkInfo = value
                 },
             };
         });
@@ -140,8 +147,9 @@
             }
         };
 
-        $scope.showJoinDialog = function(ev, index) {
+        $scope.showJoinDialog = function(ev, index, item) {
             sharedProperties.setIndex(index);
+            sharedProperties.setNetworkInfo(item);
             $scope.index = index;
             $mdDialog.show({
                 controller: DialogController,
@@ -155,6 +163,7 @@
 
         function DialogController($scope, $mdDialog, $http, $interval, sharedProperties) {
             var index = sharedProperties.getIndex();
+            var networkInfo = sharedProperties.getNetworkInfo();
             $scope.isDisplay = false;
             $scope.thread = {
                 networkKey: '00112233445566778899aabbccddeeff',
@@ -192,13 +201,18 @@
                     data: data,
                 });
 
+                data = {
+                    extPanId: networkInfo.xp,
+                    networkName: networkInfo.nn,
+                };
                 httpRequest.then(function successCallback(response) {
                     $scope.res = response.data.result;
                     if (response.data.result == 'successful') {
                         $mdDialog.hide();
                         $http({
-                            method: 'GET',
+                            method: 'POST',
                             url: '/boot_mdns',
+                            data: data,
                         });
                     }
                     $scope.isDisplay = false;
@@ -241,13 +255,18 @@
                     data: data,
                 });
 
+                data = {
+                    extPanId: $scope.thread.extPanId,
+                    networkName: $scope.thread.networkName,
+                };
                 httpRequest.then(function successCallback(response) {
                     $scope.res = response.data.result;
                     if (response.data.result == 'successful') {
                         $mdDialog.hide();
                         $http({
-                            method: 'GET',
+                            method: 'POST',
                             url: '/boot_mdns',
+                            data: data,
                         });
                     }
                     $scope.isForming = false;

@@ -68,7 +68,7 @@ DBusMessage *DBusBase::GetMessage(void)
 {
     int ret = kWpantundStatus_Ok;
 
-    VerifyOrExit(mDestination != NULL, ret = kWpantundStatus_InvalidArgument);
+    VerifyOrExit(strlen(mDestination) != 0, ret = kWpantundStatus_InvalidArgument);
     VerifyOrExit(mPath != NULL, ret = kWpantundStatus_InvalidArgument);
     VerifyOrExit(mIface != NULL, ret = kWpantundStatus_InvalidArgument);
     VerifyOrExit(mMethod != NULL, ret = kWpantundStatus_InvalidArgument);
@@ -170,6 +170,7 @@ void DBusBase::SetDestination(const char *aDestination)
 exit:
     if (ret != kWpantundStatus_Ok)
     {
+        memset(mDestination, 0, sizeof(mDestination));
         otbrLog(OTBR_LOG_ERR, "destination is NULL; error: %s", error.message);
     }
     if (dbus_error_is_set(&error))

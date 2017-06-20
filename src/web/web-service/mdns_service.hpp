@@ -28,67 +28,83 @@
 
 /**
  * @file
- *   This file implements the web service of border router
+ *   This file implements the mdns service
  */
 
-#ifndef WEB_SERVICE
-#define WEB_SERVICE
+#ifndef MNDS_SERVICE
+#define MNDS_SERVICE
 
-#include <algorithm>
+// #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <net/if.h>
 
-#include <boost/property_tree/ptree_fwd.hpp>
-#include <boost/asio/ip/tcp.hpp>
+#include <jsoncpp/json/json.h>
+#include <jsoncpp/json/writer.h>
 
+#include "../mdns-publisher/mdns_publisher.hpp"
 #include "../wpan-controller/wpan_controller.hpp"
+#include "common/logging.hpp"
 
-namespace SimpleWeb {
-template<class T> class Server;
-typedef boost::asio::ip::tcp::socket HTTP;
-}
+#define OT_BORDER_ROUTER_PORT 49191
 
 namespace ot {
 namespace Web {
 
-typedef SimpleWeb::Server<SimpleWeb::HTTP> HttpServer;
-
-class WebServer
+class MdnsService
 {
 public:
-    WebServer(void);
-    ~WebServer(void);
-    void StartWebServer(const char *aIfName);
+
+    /**
+     * This method handles mdns service http request.
+     *
+     * @returns The reference to the http response of mdns service.
+     *
+     */
+    std::string &HandleMdnsRequest(const std::string &aMdnsRequest);
+
+    /**
+     * This method starts mdns service.
+     *
+     * @param[in]  aNetworkName  The reference to the network name.
+     * @param[in]  aExtPanId     The reference to the extend PAN ID.
+     *
+     */
+    int StartMdnsService(const std::string &aNetworkName, const std::string &aExtPanId);
+
+    /**
+     * This method updates mdns service.
+     *
+     * @param[in]  aNetworkName  The reference to the network name.
+     * @param[in]  aExtPanId     The reference to the extend PAN ID.
+     *
+     */
+    int UpdateMdnsService(const std::string &aNetworkName, const std::string &aExtPanId);
+
+    /**
+     * This method check if mdns service is started.
+     *
+     * @retval true    Has started the mdns service.
+     * @retval false   Has not started the mdns service.
+     *
+     */
+    bool IsStartedService() { return ot::Mdns::Publisher::GetInstance().IsStarted(); };
+
+private:
+
+    char        mIfName[IFNAMSIZ];
+    std::string mNetworkName, mExtPanId;
 
     enum
     {
-        kPropertyType_String = 0,
-        kPropertyType_Data
+        kMndsServiceStatus_OK = 0,
+        kMndsServiceStatus_ParseRequestFailed,
     };
 
-private:
-    typedef std::string (*HttpRequestCallback)(boost::property_tree::ptree &aPtreeObject, const char *aIfName);
-
-    void HandleHttpRequest(const char *aUrl, const char *aMethod, HttpRequestCallback aCallback, const char *aIfName);
-    void JoinNetworkResponse(void);
-    void FormNetworkResponse(void);
-    void AddOnMeshPrefix(void);
-    void DeleteOnMeshPrefix(void);
-    void GetNetworkResponse(void);
-    void AvailableNetworkResponse(void);
-    void BootMdnsPublisher(void);
-    void DefaultHttpResponse(void);
-
-    HttpServer                      *mServer;
-    static ot::Dbus::WpanNetworkInfo sNetworks[DBUS_MAXIMUM_NAME_LENGTH];
-    static int                       sNetworksCount;
-    static std::string               sNetowrkName, sExtPanId;
-    static bool                      sIsStarted;
-    char                             mIfName[IFNAMSIZ];
 };
 
 } //namespace Web

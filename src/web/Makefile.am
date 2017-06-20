@@ -74,7 +74,9 @@ libotbr_web_la_SOURCES                                          = \
     wpan-controller/wpan_controller.cpp                           \
     mdns-publisher/mdns_publisher.cpp                             \
     pskc-generator/pskc.cpp                                       \
-    web-service/web_service.cpp                                   \
+    web-service/mdns_service.cpp                                  \
+    web-service/web_server.cpp                                    \
+    web-service/wpan_service.cpp                                  \
     $(NULL)
 
 libotbr_web_la_LDFLAGS                                          = \
@@ -130,7 +132,9 @@ noinst_HEADERS                                                 = \
     mdns-publisher/mdns_publisher.hpp                            \
     pskc-generator/pskc.hpp                                      \
     utils/encoding.hpp                                           \
-    web-service/web_service.hpp                                  \
+    web-service/web_server.hpp                                   \
+    web-service/wpan_service.hpp                                 \
+    web-service/mdns_service.hpp                                 \
     wpan-controller/dbus_base.hpp                                \
     wpan-controller/dbus_form.hpp                                \
     wpan-controller/dbus_gateway.hpp                             \

@@ -51,6 +51,18 @@
 namespace ot {
 namespace Mdns {
 
+enum
+{
+    kMdnsPublisher_OK = 0,
+    kMdnsPublisher_FailedCreatePoll,
+    kMdnsPublisher_FailedFreePoll,
+    kMdnsPublisher_FailedCreateGoup,
+    kMdnsPublisher_FailedAddSevice,
+    kMdnsPublisher_FailedRegisterSevice,
+    kMdnsPublisher_FailedUpdateSevice,
+    kMdnsPublisher_FailedCreateClient,
+};
+
 class Publisher
 {
 public:
@@ -127,6 +139,15 @@ public:
         return publisherInstance;
     }
 
+    /**
+     * This method returns the boolean result of mDNS publisher.
+     *
+     * @retval true   Has started the mdns publishing service.
+     * @retval false  Has not started the mdns publishing service.
+     *
+     */
+    bool IsStarted() const { return mIsStarted; }
+
 private:
     Publisher(void);
 
@@ -145,6 +166,7 @@ private:
     AvahiSimplePoll *mSimplePoll;
     AvahiClient     *mClient;
     uint16_t         mPort;
+    bool             mIsStarted;
     char            *mServiceName;
     char            *mNetworkNameTxt;
     char            *mExtPanIdTxt;
