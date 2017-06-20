@@ -90,12 +90,15 @@ const char *WPANController::GetDBusInterfaceName(void) const
 {
 
     DBusIfname dbusIfName;
+    char      *destination;
     int        ret = kWpantundStatus_Ok;
 
     dbusIfName.SetInterfaceName(mIfName);
     VerifyOrExit(dbusIfName.ProcessReply() == kWpantundStatus_Ok, ret = kWpantundStatus_InvalidDBusName);
+    destination = dbusIfName.GetDBusName();
+    // VerifyOrExit(strcmp(destination, "(null)") != 0, ret = kWpantundStatus_InvalidDBusName);
 exit:
-    return ret ? NULL : dbusIfName.GetDBusName();
+    return ret ? NULL : destination;
 }
 
 int WPANController::Leave(void)
