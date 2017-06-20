@@ -35,6 +35,7 @@
 . script/_otbr
 . script/_ipforward
 . script/_nat64
+. script/_mdns
 
 main()
 {

@@ -134,7 +134,7 @@ int Publisher::CreateService(AvahiClient *aClient)
         otbrLog(OTBR_LOG_ERR, "Adding service '%s'", mServiceName);
 
         VerifyOrExit(avahi_entry_group_add_service(mClientGroup, AVAHI_IF_UNSPEC,
-                                                   AVAHI_PROTO_UNSPEC, static_cast<AvahiPublishFlags>(0),
+                                                   AVAHI_PROTO_INET, static_cast<AvahiPublishFlags>(0),
                                                    mServiceName, mType, NULL, NULL, mPort,
                                                    mNetworkNameTxt, mExtPanIdTxt, NULL) == 0,
                      ret = kMdnsPublisher_FailedAddSevice);
